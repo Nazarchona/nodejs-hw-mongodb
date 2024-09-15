@@ -1,31 +1,24 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-// Завантаження змінних оточення з файлу .env
-dotenv.config();
-
-const initMongoConnection = async () => {
+import mongoose from 'mongoose';
+import { env } from '../utilits/env.js';
+export const initMongoConnection = async () => {
   try {
-    const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_URL, MONGODB_DB } = process.env;
-
-    if (!MONGODB_USER || !MONGODB_PASSWORD || !MONGODB_URL || !MONGODB_DB) {
-      throw new Error('MongoDB connection variables are not defined in environment variables.');
-    }
-
-    const uri = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_URL}/${MONGODB_DB}?retryWrites=true&w=majority`;
-
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const user = env('MONGODB_USER');
+    const password = env('MONGODB_PASSWORD');
+    const url = env('MONGODB_URL');
+    const db = env('MONGODB_DB');
+    const DB_HOST = `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority&appName=Contacts`;
+    await mongoose.connect(DB_HOST);
     console.log('Mongo connection successfully established!');
   } catch (error) {
-    console.error('Mongo connection error:', error);
+    console.log('Mongo connection error', error.message);
     throw error;
   }
 };
+//op4Z8z0J8AetwGeF
 
-module.exports = initMongoConnection;
+
+
+
 
 
 
