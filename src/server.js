@@ -3,7 +3,9 @@ import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
 import { env } from './utilits/env.js';
-import { getAllContacts, getContactById } from './services/contacts.js';
+import contactsRouter from './routers/contacts.js'; // Імпортуємо роутер контактів
+import errorHandler from './middlewares/errorHandler.js'; // Імпортуємо обробку помилок
+import notFoundHandler from './middlewares/notFoundHandler.js'; // Імпортуємо обробку "не знайдено"
 
 dotenv.config();
 const PORT = Number(env('PORT', '3000'));
@@ -21,48 +23,18 @@ export const setupServer = () => {
   app.use(cors());
   app.use(express.json());
 
+  // Підключаємо роутер для контактів
+  app.use('/contacts', contactsRouter);
 
-  app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
+  // Обробка неіснуючих маршрутів
+  app.use(notFoundHandler);
 
-    res.status(200).json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  });
+  // Middleware для обробки помилок
+  app.use(errorHandler);
 
-  app.get('/contacts/:contactId', async (req, res) => {
-    const { contactId } = req.params;
-    const contact = await getContactById(contactId);
-
-    if (!contact) {
-      return res.status(404).json({
-        message: 'Contact not found',
-      });
-    }
-
-    res.status(200).json({
-      status: 200,
-      message: `Successfully found contact with id ${contactId}!`,
-      data: contact,
-    });
-  });
-
-  app.use((req, res) => {
-    res.status(404).json({
-      message: `${req.url} not found`,
-    });
-  });
-
-  app.use((error, req, res, next) => {
-    res.status(500).json({
-      message: error.message,
-    });
-  });
-
-  app.listen(PORT, () => console.log(`This server running on PORT 3000`));
+  app.listen(PORT, () => console.log(`This server running on PORT ${PORT}`));
 };
+
 
 
 
