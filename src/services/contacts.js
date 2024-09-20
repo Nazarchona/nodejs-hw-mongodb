@@ -1,34 +1,39 @@
-import { ContactCollection } from '../models/contact.js';
+import { ContactCollection } from '../models/Contact.js';
 
-// Отримання всіх контактів
+
 export const getAllContacts = async () => {
   const contacts = await ContactCollection.find();
   return contacts;
 };
 
-// Отримання контакту за ID
-export const getContactById = async (contactId) => {
-  const contact = await ContactCollection.findById(contactId);
+
+export const getContactById = async (id) => {
+  const contact = await ContactCollection.findById(id);
   return contact;
 };
 
-// Створення нового контакту
-export const createContact = async (data) => {
-  const newContact = await ContactCollection.create(data);
-  return newContact;
+
+export const addContact = (payload) => ContactCollection.create(payload);
+
+
+export const updateContact = async (filter, data, options = {}) => {
+  const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
+    new: true,
+    includeResultMetadata: true,
+    ...options,
+  });
+
+  if (!rawResult || !rawResult.value) return null;
+
+  return {
+    data: rawResult.value,
+    isNew: Boolean(rawResult.lastErrorObject?.upserted),
+  };
 };
 
-// Оновлення існуючого контакту
-export const updateContact = async (contactId, data) => {
-  const updatedContact = await ContactCollection.findByIdAndUpdate(contactId, data, { new: true });
-  return updatedContact;
-};
 
-// Видалення контакту
-export const deleteContact = async (contactId) => {
-  const deletedContact = await ContactCollection.findByIdAndRemove(contactId);
-  return deletedContact;
-};
+export const deleteContact = (filter) =>
+  ContactCollection.findOneAndDelete(filter);
 
 
 

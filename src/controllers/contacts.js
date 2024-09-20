@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import {
   getAllContacts,
   getContactById,
-  createContact,
+  addContact,
   updateContact,
   deleteContact,
 } from '../services/contacts.js';
@@ -36,7 +36,7 @@ export const getContactController = async (req, res) => {
 
 
 export const addContactController = async (req, res) => {
-  const data = await createContact(req.body);  // Використовуємо createContact замість addContact
+  const data = await addContact(req.body);
 
   res.status(201).json({
     status: 201,
