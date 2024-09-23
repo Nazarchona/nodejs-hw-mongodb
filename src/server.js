@@ -8,7 +8,7 @@ import errorHandler from './middlewares/errorHandler.js'; // Імпортуєм�
 import notFoundHandler from './middlewares/notFoundHandler.js'; // Імпортуємо обробку "не знайдено"
 
 dotenv.config();
-const PORT = Number(env('PORT', '3000'));
+const PORT = Number(env('PORT', '3001'));
 
 export const setupServer = () => {
   const app = express();
