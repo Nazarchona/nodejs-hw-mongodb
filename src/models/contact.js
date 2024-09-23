@@ -1,4 +1,8 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
+const { Schema, model, models } = mongoose;
+import { contactTypeList } from '../constant/contacts.js';
+import { handleSaveError, setUpdateOptions } from './hooks.js';
+
 const contactSchema = new Schema(
   {
     name: {
@@ -22,13 +26,23 @@ const contactSchema = new Schema(
     contactType: {
       type: String,
       required: true,
-      enum: ['personal', 'home'],
+      enum: contactTypeList,
     },
   },
   {
     timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
-export const ContactCollection = model('contact', contactSchema);
+contactSchema.post('save', handleSaveError);
+contactSchema.pre('findOneAndUpdate', setUpdateOptions);
+contactSchema.post('findOneAndUpdate', handleSaveError);
+
+// Перевірка, чи модель вже існує
+const ContactCollection = models.contact || model('contact', contactSchema);
+
+export const sortFields = ['name'];
+export default ContactCollection;
+
+
