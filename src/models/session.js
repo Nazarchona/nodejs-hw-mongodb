@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+
 import { handleSaveError, setUpdateOptions } from './hooks.js';
 const sessionSchema = new Schema(
   {
@@ -24,7 +25,10 @@ const sessionSchema = new Schema(
       required: true,
     },
   },
-  { versionKey: false, timestamps: true },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
 
 sessionSchema.post('save', handleSaveError);

@@ -1,11 +1,6 @@
 import ContactCollection from '../models/contact.js';
-
-
 import calculatePaginationData from '../utilits/calculatePagination.js';
-
-
 import { SORT_ORDER } from '../constant/java.js';
-
 
 export const getContacts = async ({
   perPage,
@@ -18,10 +13,13 @@ export const getContacts = async ({
   const contactQuery = ContactCollection.find();
 
   if (filter.isFavourite !== undefined) {
-    contactQuery.where('isFavourite').equals(filter.isFavourite);
+    contactQuery.where('isFavourite').eq(filter.isFavourite);
   }
   if (filter.type) {
-    contactQuery.where('contactType').equals(filter.type);
+    contactQuery.where('contactType').eq(filter.type);
+  }
+  if (filter.userId) {
+    contactQuery.where('userId').eq(filter.userId);
   }
 
   const count = await ContactCollection.find()
@@ -44,15 +42,12 @@ export const getContacts = async ({
   };
 };
 
-
-export const getContactById = async (id) => {
-  const contact = await ContactCollection.findById(id);
+export const getContact = async (filter) => {
+  const contact = await ContactCollection.findById(filter);
   return contact;
 };
 
-
 export const addContact = (payload) => ContactCollection.create(payload);
-
 
 export const updateContact = async (filter, data, options = {}) => {
   const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
@@ -62,13 +57,11 @@ export const updateContact = async (filter, data, options = {}) => {
 
   if (!rawResult || !rawResult.value) return null;
 
-
   return {
     data: rawResult.value,
     isNew: Boolean(rawResult.lastErrorObject?.upserted),
   };
 };
-
 
 export const deleteContact = (filter) =>
   ContactCollection.findOneAndDelete(filter);

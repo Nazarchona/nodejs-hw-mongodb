@@ -4,11 +4,13 @@ import * as authServices from '../services/auth.js';
 const authenticate = async (req, res, next) => {
   const authorization = req.get('Authorization');
 
+
   if (!authorization) {
-    return next(createHttpError(401, 'Authorization header not found'));
+    return next(createHttpError(401, 'Authorization headers not found'));
   }
 
   const [bearer, token] = authorization.split(' ');
+
 
   if (bearer !== 'Bearer') {
     return next(
@@ -17,9 +19,11 @@ const authenticate = async (req, res, next) => {
   }
 
   const session = await authServices.findSessionByAccessToken(token);
+
   if (!session) {
     return next(createHttpError(401, 'Session not found'));
   }
+
 
   if (new Date() > session.accessTokenValidUntil) {
     return next(createHttpError(401, 'Access token expired'));
@@ -34,4 +38,5 @@ const authenticate = async (req, res, next) => {
 
   next();
 };
+
 export default authenticate;

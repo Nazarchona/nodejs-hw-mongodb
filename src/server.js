@@ -1,38 +1,32 @@
 import express from 'express';
 import cors from 'cors';
-import pino from 'pino-http';
-import dotenv from 'dotenv';
-import { env } from './utilits/env.js';
-import contactsRouter from './routers/contacts.js'; // Імпортуємо роутер контактів
-import errorHandler from './middlewares/errorHandler.js'; // Імпортуємо обробку помилок
-import notFoundHandler from './middlewares/notFoundHandler.js'; // Імпортуємо обробку "не знайдено"
+import cookieParser from 'cookie-parser';
 
-dotenv.config();
-const PORT = Number(env('PORT', '3001'));
+import { env } from './utilits/env.js';
+
+import logger from './middlewares/logger.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
+import errorHandler from './middlewares/errorHandler.js';
+
+import authRouter from './routers/auth.js';
+import contactsRouter from './routers/contacts.js';
 
 export const setupServer = () => {
   const app = express();
 
-  const logger = pino({
-    transport: {
-      target: 'pino-pretty',
-    },
-  });
-
   app.use(logger);
   app.use(cors());
   app.use(express.json());
+  app.use(cookieParser());
 
-  // Підключаємо роутер для контактів
+  app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
 
-  // Обробка неіснуючих маршрутів
   app.use(notFoundHandler);
-
-  // Middleware для обробки помилок
   app.use(errorHandler);
 
-  app.listen(PORT, () => console.log(`This server running on PORT ${PORT}`));
+  const port = Number(env('PORT', '3000'));
+  app.listen(port, () => console.log(`This server running on PORT 3000`));
 };
 
 
