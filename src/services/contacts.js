@@ -43,13 +43,11 @@ export const getContacts = async ({
 };
 
 export const getContact = async (filter) => {
-  const contactQuery = ContactCollection.findOne(filter);
-  const contact = await contactQuery;
+  const contact = await ContactCollection.findOne(filter);
   return contact;
 };
 
 export const addContact = (payload) => ContactCollection.create(payload);
-
 export const updateContact = async (filter, data, options = {}) => {
   const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
     includeResultMetadata: true,
@@ -66,7 +64,6 @@ export const updateContact = async (filter, data, options = {}) => {
 
 export const deleteContact = (filter) =>
   ContactCollection.findOneAndDelete(filter);
-
 
 
 
