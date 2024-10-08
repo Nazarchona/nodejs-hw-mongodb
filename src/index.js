@@ -8,6 +8,7 @@ const bootstrap = async () => {
   await createDirIfNotExists(TEMP_UPLOAD_DIR);
   await createDirIfNotExists(UPLOAD_DIR);
 };
+
 void bootstrap();
 
 
