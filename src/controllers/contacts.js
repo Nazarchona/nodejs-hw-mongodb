@@ -13,6 +13,12 @@ import parseContactFilterParams from '../utilits/filter/parsFilter.js';
 
 import { sortFields } from '../models/contact.js';
 
+import saveFileToUploadDir from '../utilits/saveFileToUploadDir.js';
+import saveFileToCloudinary from '../utilits/saveFileToCloudinary.js';
+import { env } from '../utilits/env.js';
+
+const enableCloudinary = env('ENABLE_CLOUDINARY');
+
 export const getContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams({ ...req.query, sortFields });
@@ -64,9 +70,17 @@ export const addContactController = async (req, res) => {
 };
 
 export const upsertContactController = async (req, res) => {
+  let photo;
+  if (req.file) {
+    if (enableCloudinary === 'true') {
+      photo = await saveFileToCloudinary(req.file, 'photo');
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+  }
   const { id } = req.params;
   const { _id: userId } = req.user;
-  const { isNew, data } = await updateContact({ _id: id, userId }, req.body, {
+  const { isNew, data } = await updateContact({ _id: id, userId, photo }, req.body, {
     upsert: true,
   });
 
