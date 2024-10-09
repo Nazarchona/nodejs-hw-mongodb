@@ -1,23 +1,49 @@
 import * as authServices from '../services/auth.js';
+import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
+
+export const requestResetEmailController = async (req, res, next) => {
+  const email = req.body.email;
+
+  try {
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: '5m',
+    });
 
 
-export const requestResetEmailController = async (req, res) => {
-  await authServices.requestResetToken(req.body.email);
-  res.json({
-    message: 'Reset password email was successful sent!',
-    status: 200,
-    data: {},
-  });
+
+    const resetUrl = `${process.env.APP_DOMAIN}/reset-password?token=${token}`;
+
+    await authServices.sendResetEmail(email, resetUrl);
+    res.json({
+      message: 'Reset password email was successfully sent!',
+      status: 200,
+      data: {},
+    });
+  } catch (error) {
+    next(
+      createHttpError(
+        500,
+        'Failed to send reset password email. Please try again later.'
+      )
+    );
+  }
 };
 
 
-export const resetPasswordController = async (req, res) => {
-  await authServices.resetPassword(req.body);
-  res.json({
-    message: 'Password was successfully reset!',
-    status: 200,
-    data: {},
-  });
+export const resetPasswordController = async (req, res, next) => {
+  try {
+    await authServices.resetPassword(req.body);
+    res.json({
+      message: 'Password was successfully reset!',
+      status: 200,
+      data: {},
+    });
+  } catch (error) {
+    next(
+      createHttpError(500, 'Failed to reset password. Please try again later.')
+    );
+  }
 };
 
 const setupSession = (res, session) => {

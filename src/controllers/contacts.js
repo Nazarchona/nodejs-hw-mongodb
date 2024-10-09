@@ -7,6 +7,7 @@ import {
   deleteContact,
 } from '../services/contacts.js';
 
+
 import parsePaginationParams from '../utilits/parsPagination.js';
 import parseSortParams from '../utilits/parsSort.js';
 import parseContactFilterParams from '../utilits/filter/parsFilter.js';
@@ -59,8 +60,17 @@ export const getContactController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
+
+  let photo;
+  if (req.file) {
+    if (enableCloudinary === 'true') {
+      photo = await saveFileToCloudinary(req.file, 'photo');
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+}
   const { _id: userId } = req.user;
-  const data = await addContact({ ...req.body, userId });
+  const data = await addContact({ ...req.body, userId, photo, });
 
   res.status(201).json({
     status: 201,
@@ -96,7 +106,17 @@ export const upsertContactController = async (req, res) => {
 export const patchContactController = async (req, res) => {
   const { id } = req.params;
   const { _id: userId } = req.user;
-  const result = await updateContact({ _id: id, userId }, req.body);
+
+  let photo;
+  if (req.file) {
+    if (enableCloudinary === 'true') {
+      photo = await saveFileToCloudinary(req.file, 'photo');
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+}
+
+  const result = await updateContact({ _id: id, userId, photo, }, req.body);
 
   if (!result) {
     throw createHttpError(404, `Contact with id=${id} not found`);
