@@ -8,8 +8,8 @@ import createHttpError from 'http-errors';
 import { randomBytes } from 'crypto';
 import { env } from '../utilits/env.js';
 import { TEMPLATES_DIR } from '../constant/java.js';
-import SessionCollection from '../models/Session.js';
-import UserCollection from '../models/User.js';
+import SessionCollection from '../models/session.js';
+import UserCollection from '../models/user.js';
 
 import {
   accessTokenLifetime,
