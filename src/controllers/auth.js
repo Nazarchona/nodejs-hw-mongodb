@@ -1,4 +1,6 @@
 import * as authServices from '../services/auth.js';
+
+
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
@@ -10,6 +12,7 @@ const setupSession = (res, session) => {
   });
 };
 
+
 export const signupController = async (req, res) => {
   const newUser = await authServices.signup(req.body);
   res.status(201).json({
@@ -19,6 +22,7 @@ export const signupController = async (req, res) => {
   });
 };
 
+
 export const requestResetEmailController = async (req, res) => {
   await authServices.requestResetToken(req.body.email);
   res.json({
@@ -27,6 +31,7 @@ export const requestResetEmailController = async (req, res) => {
     data: {},
   });
 };
+
 
 export const resetPasswordController = async (req, res) => {
   const { token, password } = req.body;
@@ -40,6 +45,7 @@ export const resetPasswordController = async (req, res) => {
   });
 };
 
+
 export const signinController = async (req, res) => {
   const session = await authServices.signin(req.body);
   setupSession(res, session);
@@ -51,6 +57,8 @@ export const signinController = async (req, res) => {
     },
   });
 };
+
+
 export const refreshController = async (req, res) => {
   const { refreshToken, sessionId } = req.cookies;
   const session = await authServices.refreshSession({
@@ -66,6 +74,8 @@ export const refreshController = async (req, res) => {
     },
   });
 };
+
+
 export const signoutController = async (req, res) => {
   const { sessionId } = req.cookies;
 

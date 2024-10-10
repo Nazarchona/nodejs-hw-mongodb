@@ -1,5 +1,6 @@
 import * as fs from 'node:fs/promises';
 
+
 const createDirIfNoteExists = async (path) => {
   try {
     await fs.access(path);
@@ -9,5 +10,6 @@ const createDirIfNoteExists = async (path) => {
     }
   }
 };
+
 
 export default createDirIfNoteExists;

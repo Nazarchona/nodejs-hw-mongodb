@@ -1,10 +1,18 @@
 import { Router } from 'express';
+
 import * as authControllers from '../controllers/auth.js';
+
 import { requestResetEmailSchema } from '../validation/auth.js';
+
 import { resetPasswordSchema } from '../validation/auth.js';
+
 import ctrlWrapper from '../utilits/ctrlWrapper.js';
+
 import validateBody from '../utilits/validateBody.js';
+
 import { userSigninSchema, userSignupSchema } from '../validation/users.js';
+
+
 const authRouter = Router();
 
 authRouter.post(

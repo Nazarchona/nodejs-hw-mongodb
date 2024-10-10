@@ -1,4 +1,5 @@
 import createHttpError from 'http-errors';
+
 import * as authServices from '../services/auth.js';
 
 const authenticate = async (req, res, next) => {

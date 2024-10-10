@@ -1,6 +1,12 @@
 import ContactCollection from '../models/contact.js';
+
+
 import calculatePaginationData from '../utilits/calculatePagination.js';
+
+
 import { SORT_ORDER } from '../constant/java.js';
+
+
 export const getAllContacts = async ({
   userId,
   perPage,
@@ -26,8 +32,14 @@ export const getAllContacts = async ({
     ...paginationData,
   };
 };
+
+
 export const getContactById = (id) => ContactCollection.findById(id);
+
+
 export const createContact = (payload) => ContactCollection.create(payload);
+
+
 export const updateContact = async (filter, data, options = {}) => {
   const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
     new: true,
@@ -40,6 +52,8 @@ export const updateContact = async (filter, data, options = {}) => {
     isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };
+
+
 export const deleteContact = (filter) =>
   ContactCollection.findOneAndDelete(filter);
 

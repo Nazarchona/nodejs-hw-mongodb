@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
+
 const { Schema, model, models } = mongoose;
+
 import { enumList } from '../constant/contacts.js';
+
 import { handleSaveError } from './hooks.js';
+
 
 const contactSchema = new Schema(
   {

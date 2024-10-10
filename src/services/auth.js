@@ -1,20 +1,32 @@
 import bcrypt from 'bcrypt';
+
 import jwt from 'jsonwebtoken';
+
 import handlebars from 'handlebars';
+
 import path from 'node:path';
+
 import fs from 'node:fs/promises';
+
 import { sendEmail } from '../utilits/sendMail.js';
+
 import createHttpError from 'http-errors';
+
 import { randomBytes } from 'crypto';
+
 import { env } from '../utilits/env.js';
+
 import { TEMPLATES_DIR } from '../constant/java.js';
+
 import SessionCollection from '../models/session.js';
+
 import UserCollection from '../models/user.js';
 
 import {
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constant/users.js';
+
 
 export const requestResetToken = async email => {
   const user = await UserCollection.findOne({ email });

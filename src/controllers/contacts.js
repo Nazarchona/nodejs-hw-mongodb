@@ -1,10 +1,17 @@
 import * as contactServices from '../services/contacts.js';
+
 import createHttpError from 'http-errors';
+
 import parsePaginationParams from '../utilits/parsPagination.js';
+
 import parseSortParams from '../utilits/parsSort.js';
+
 import { sortFields } from '../models/contact.js';
+
 import saveFileToUploadDir from '../utilits/saveFileToUploadDir.js';
+
 import saveFileToCloudinary from '../utilits/saveFileToCloudinary.js';
+
 import { env } from '../utilits/env.js';
 
 const enableCloudinary = env('ENABLE_CLOUDINARY');
@@ -29,6 +36,7 @@ export const getAllContactsController = async (req, res, next) => {
   });
 };
 
+
 export const getContactByIdController = async (req, res) => {
   const { id } = req.params;
   const data = await contactServices.getContactById(id);
@@ -41,6 +49,7 @@ export const getContactByIdController = async (req, res) => {
     data,
   });
 };
+
 export const addContactController = async (req, res) => {
   let photo;
   if (req.file) {
@@ -62,6 +71,8 @@ export const addContactController = async (req, res) => {
     data,
   });
 };
+
+
 export const upsertContactController = async (req, res) => {
   const { id } = req.params;
   const { _id: userId } = req.user;
@@ -81,6 +92,7 @@ export const upsertContactController = async (req, res) => {
   });
 };
 
+
 export const patchContactController = async (req, res) => {
   const { id } = req.params;
   const { _id: userId } = req.user;
@@ -98,6 +110,8 @@ export const patchContactController = async (req, res) => {
     data: result.data,
   });
 };
+
+
 export const deleteContactController = async (req, res) => {
   const { id } = req.params;
   const { _id: userId } = req.user;

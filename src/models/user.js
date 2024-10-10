@@ -4,6 +4,7 @@ import { emailRegexp } from '../constant/users.js';
 
 import { handleSaveError } from './hooks.js';
 
+
 const userSchema = new Schema(
   {
     name: {
@@ -23,6 +24,8 @@ const userSchema = new Schema(
   },
   { versionKey: false, timestamps: true },
 );
+
+
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
@@ -31,6 +34,7 @@ userSchema.methods.toJSON = function () {
 
 userSchema.post('save', handleSaveError);
 userSchema.post('findOneAndUpdate', handleSaveError);
+
 
 const UserCollection = model('user', userSchema);
 export default UserCollection;

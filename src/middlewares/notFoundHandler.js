@@ -3,5 +3,7 @@ const notFoundHandler = (req, res) => {
     message: `${req.url} not found`,
   });
 };
+
+
 export default notFoundHandler;
 

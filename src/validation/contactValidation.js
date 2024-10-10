@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { enumList } from '../constant/contacts.js';
 
+
 export const contactAddSchema = Joi.object({
   name: Joi.string().min(3).max(20).required(),
   phoneNumber: Joi.string().min(3).max(20).required(),
@@ -10,6 +11,7 @@ export const contactAddSchema = Joi.object({
     .valid(...enumList)
     .required(),
 });
+
 
 export const contactUpdateSchema = Joi.object({
   name: Joi.string().min(3).max(20),

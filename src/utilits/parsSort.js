@@ -1,5 +1,6 @@
 import { SORT_ORDER } from '../constant/java.js';
 
+
 const parseSortParams = ({ sortBy, sortFields, sortOrder }) => {
   const parsedSortBy = sortFields.includes(sortBy) ? sortBy : '_id';
 
@@ -12,4 +13,6 @@ const parseSortParams = ({ sortBy, sortFields, sortOrder }) => {
     sortOrder: parsedSortOrder,
   };
 };
+
+
 export default parseSortParams;

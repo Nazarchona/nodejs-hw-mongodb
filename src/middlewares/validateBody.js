@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 
+
 const validateBody = (schema) => {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
@@ -9,5 +10,6 @@ const validateBody = (schema) => {
     next();
   };
 };
+
 
 export default validateBody;
