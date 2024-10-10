@@ -1,23 +1,13 @@
-// middleware/validateBody.js
-
 import createHttpError from 'http-errors';
 
-
 const validateBody = (schema) => {
-  const func = async (req, res, next) => {
-    try {
-      await schema.validateAsync(req.body, {
-        abortEarly: false,
-      });
-      next();
-    } catch (error) {
-      const validateError = createHttpError(400, error.message);
-      next(validateError);
+  return (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      return next(createHttpError(400, error.details[0].message));
     }
+    next();
   };
-
-  return func;
 };
-
 
 export default validateBody;

@@ -1,56 +1,64 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
+const { Schema, model, models } = mongoose;
+import { enumList } from '../constant/contacts.js';
+import { handleSaveError } from './hooks.js';
 
-import { contactTypeList } from '../constant/contacts.js';
-
-import { handleSaveError, setUpdateOptions } from './hooks.js';
 const contactSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'name must be exist'],
     },
     phoneNumber: {
       type: String,
-      required: true,
+      required: [true, 'phoneNumber must be exist'],
     },
     email: {
       type: String,
       required: false,
-      default: '',
     },
-    isFavourite: {
+    isFavorite: {
       type: Boolean,
-      required: false,
       default: false,
+      require: [true, 'isFavorite must be exist'],
     },
     contactType: {
       type: String,
-      required: true,
-      enum: contactTypeList,
+      enum: enumList,
+      required: [true, 'contactType must be exist'],
+      default: 'personal',
+    },
+    photo: {
+      type: String,
     },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'user',
       required: true,
     },
-    photo: {
-      type: String
-    },
   },
-  {
-    timestamps: true,
-    versionKey: false,
-  },
+  { versionKey: false, timestamps: true },
 );
 
 contactSchema.post('save', handleSaveError);
-contactSchema.pre('findOneAndUpdate', setUpdateOptions);
-contactSchema.post('findOneAndUpdate', handleSaveError);
 
-const ContactCollection = model('contact', contactSchema);
+// Check if the model is already registered to prevent the OverwriteModelError
+const ContactCollection = models.contact || model('contact', contactSchema);
 
-export const sortFields = ['name'];
+export const sortFields = [
+  'name',
+  'phoneNumber',
+  'email',
+  'isFavorite',
+  'contactType',
+  'createdAt',
+  'updatedAt',
+];
 
 export default ContactCollection;
+
+
+
+
 
 
